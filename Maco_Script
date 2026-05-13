@@ -1,0 +1,97 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Maco-Script",
+   LoadingTitle = "Maco-Script",
+   LoadingSubtitle = "Made by Maco",
+   ConfigurationSaving = {
+      Enabled = false
+   }
+})
+
+local MainTab = Window:CreateTab("Main", 4483362458)
+
+MainTab:CreateButton({
+    Name = "Zombie Attack",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/freshdotmp3/Fresh-s-Script/refs/heads/main/Zombie%20Attack.lua"))()
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "Ro ghoul",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TrapstarKSSKSKSKKS/Main/main/TrapHub.lua"))()
+    end,
+})
+
+local MainTab = Window:CreateTab("Speed/Fly", 4483362458)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local normalSpeed = 16
+local fastSpeed = 50
+
+local speedEnabled = false
+
+MainTab:CreateToggle({
+   Name = "Speed Toggle",
+   CurrentValue = false,
+   Callback = function(Value)
+      speedEnabled = Value
+
+      local character = player.Character or player.CharacterAdded:Wait()
+      local humanoid = character:WaitForChild("Humanoid")
+
+      if speedEnabled then
+         humanoid.WalkSpeed = fastSpeed
+      else
+         humanoid.WalkSpeed = normalSpeed
+      end
+   end,
+})
+
+local MiscTab = Window:CreateTab("Misc", 4483362458)
+
+local startTime = tick()
+
+local PlaytimeLabel = MiscTab:CreateLabel("Playtime: 0h 0m")
+
+task.spawn(function()
+   while true do
+      local elapsed = tick() - startTime
+
+      local hours = math.floor(elapsed / 3600)
+      local minutes = math.floor((elapsed % 3600) / 60)
+
+      local text = "Playtime: " .. hours .. "h " .. minutes .. "m"
+
+      -- safer update method
+      PlaytimeLabel:Set(text)
+
+      task.wait(5) -- important: hindi 1 min, para di mag spam
+   end
+end)
+
+local VirtualUser = game:GetService("VirtualUser")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local antiAFK = false
+
+player.Idled:Connect(function()
+   if antiAFK then
+      VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+      task.wait(1)
+      VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+   end
+end)
+
+MiscTab:CreateToggle({
+   Name = "Anti AFK",
+   CurrentValue = false,
+   Callback = function(Value)
+      antiAFK = Value
+   end,
+})
