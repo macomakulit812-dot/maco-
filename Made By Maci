@@ -1,0 +1,81 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Maco-Script",
+    LoadingTitle = "Maco-Script",
+    LoadingSubtitle = "Made by Maco",
+    ConfigurationSaving = { Enabled = false }
+})
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local VirtualUser = game:GetService("VirtualUser")
+
+-- 🏠 MAIN TAB
+local MainTab = Window:CreateTab("Main", 4483362458)
+
+MainTab:CreateButton({
+    Name = "Zombie Attack",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/freshdotmp3/Fresh-s-Script/refs/heads/main/Zombie%20Attack.lua"))()
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "Ro Ghoul",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/TrapstarKSSKSKSKKS/Main/main/TrapHub.lua"))()
+    end,
+})
+
+-- ⚡ SPEED TAB
+local SpeedTab = Window:CreateTab("Speed/Fly", 4483362458)
+
+local normalSpeed, fastSpeed = 16, 50
+
+SpeedTab:CreateToggle({
+    Name = "Speed Toggle",
+    CurrentValue = false,
+    Callback = function(Value)
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hum = char:WaitForChild("Humanoid")
+        hum.WalkSpeed = Value and fastSpeed or normalSpeed
+    end,
+})
+
+-- 📊 MISC TAB
+local MiscTab = Window:CreateTab("Misc", 4483362458)
+
+-- PLAYTIME
+local startTime = tick()
+local PlaytimeLabel = MiscTab:CreateLabel("Playtime: 0h 0m")
+
+task.spawn(function()
+    while task.wait(5) do
+        local t = tick() - startTime
+        PlaytimeLabel:Set(
+            "Playtime: " ..
+            math.floor(t / 3600) .. "h " ..
+            math.floor((t % 3600) / 60) .. "m"
+        )
+    end
+end)
+
+-- ANTI AFK
+local antiAFK = false
+
+player.Idled:Connect(function()
+    if antiAFK then
+        VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    end
+end)
+
+MiscTab:CreateToggle({
+    Name = "Anti AFK",
+    CurrentValue = false,
+    Callback = function(Value)
+        antiAFK = Value
+    end,
+})
